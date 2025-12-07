@@ -50,23 +50,19 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       // console.log("🚀 ~ unsubscribe ~ currentUser:", currentUser);
-      setUser(currentUser);
+            setUser(currentUser);
 
       if (currentUser) {
-        // TODO: Uncomment below when backend endpoint is ready
-        // axiosPublic
-        //   .post("/add-user", {
-        //     email: currentUser.email,
-        //     role: "donor",
-        //     // status: "active",
-        //     loginCount: 1,
-        //   })
-        //   .then((res) => {
-        //     // console.log('this is axios', res.data, currentUser.email);
-        //   })
-        //   .catch((err) => {
-        //     console.error("Error adding user:", err);
-        //   });
+        axiosPublic
+          .post("/add-user", {
+            email: currentUser.email,
+            role: "donor",
+            // status: "active",
+            loginCount: 1,
+          })
+          .then((res) => {
+            // console.log('this is axios', res.data, currentUser.email);
+          });
       }
 
       setLoading(false);
