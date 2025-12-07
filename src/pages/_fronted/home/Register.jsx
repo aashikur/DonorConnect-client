@@ -18,6 +18,31 @@ export default function Register() {
   const [districts, setDistricts] = useState([]);
   const [upazilas, setUpazilas] = useState([]);
 
+  // Demo data for district and upazila
+  const demoDistricts = [
+    { id: 1, name: "Dhaka" },
+    { id: 2, name: "Chittagong" },
+    { id: 3, name: "Sylhet" },
+  ];
+
+  const demoUpazilas = {
+    1: [
+      { id: 101, name: "Dhanmondi", district_id: 1 },
+      { id: 102, name: "Gulshan", district_id: 1 },
+      { id: 103, name: "Mirpur", district_id: 1 },
+    ],
+    2: [
+      { id: 201, name: "Chittagong Sadar", district_id: 2 },
+      { id: 202, name: "Pahartali", district_id: 2 },
+      { id: 203, name: "Halishahar", district_id: 2 },
+    ],
+    3: [
+      { id: 301, name: "Sylhet Sadar", district_id: 3 },
+      { id: 302, name: "Golapganj", district_id: 3 },
+      { id: 303, name: "Jaintiapur", district_id: 3 },
+    ],
+  };
+
   const {
     register,
     handleSubmit,
@@ -29,22 +54,33 @@ export default function Register() {
   const selectedDistrict = watch("district");
 
   useEffect(() => {
-    fetch("/bd-districts.json")
-      .then((res) => res.json())
-      .then((data) => setDistricts(data));
+    // Using demo data for now
+    setDistricts(demoDistricts);
+
+    // TODO: Uncomment below when API is ready
+    // fetch("/bd-districts.json")
+    //   .then((res) => res.json())
+    //   .then((data) => setDistricts(data));
   }, []);
 
   useEffect(() => {
-    fetch("/bd-upazilas.json")
-      .then((res) => res.json())
-      .then((data) => {
-        if (selectedDistrict) {
-          const filteredUpazilas = data.filter(
-            (upazila) => upazila.district_id === selectedDistrict
-          );
-          setUpazilas(filteredUpazilas);
-        }
-      });
+    // Using demo data for now
+    if (selectedDistrict) {
+      const filteredUpazilas = demoUpazilas[selectedDistrict] || [];
+      setUpazilas(filteredUpazilas);
+    }
+
+    // TODO: Uncomment below when API is ready
+    // fetch("/bd-upazilas.json")
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     if (selectedDistrict) {
+    //       const filteredUpazilas = data.filter(
+    //         (upazila) => upazila.district_id === selectedDistrict
+    //       );
+    //       setUpazilas(filteredUpazilas);
+    //     }
+    //   });
   }, [selectedDistrict]);
 
   const onSubmit = async (data) => {
@@ -77,20 +113,32 @@ export default function Register() {
           status: "active",
         };
 
-        const dbRes = await axiosPublic.post("/users", userInfo);
-        
-        if (dbRes.data.insertedId) {
-          reset();
-          Swal.fire({
-            title: "Welcome!",
-            text: "Registration Successful",
-            icon: "success",
-            background: "#1e1e2e",
-            color: "#fff",
-            confirmButtonColor: "#a855f7",
-          });
-          navigate("/");
-        }
+        // TODO: Uncomment below when backend endpoint is ready
+        // const dbRes = await axiosPublic.post("/users", userInfo);
+        // if (dbRes.data.insertedId) {
+        //   reset();
+        //   Swal.fire({
+        //     title: "Welcome!",
+        //     text: "Registration Successful",
+        //     icon: "success",
+        //     background: "#1e1e2e",
+        //     color: "#fff",
+        //     confirmButtonColor: "#a855f7",
+        //   });
+        //   navigate("/");
+        // }
+
+        // Temporary: Show success and navigate without DB save
+        reset();
+        Swal.fire({
+          title: "Welcome!",
+          text: "Registration Successful",
+          icon: "success",
+          background: "#1e1e2e",
+          color: "#fff",
+          confirmButtonColor: "#a855f7",
+        });
+        navigate("/");
       }
     } catch (error) {
       console.error(error);
@@ -119,7 +167,8 @@ export default function Register() {
           upazila: "Unknown",
         };
         
-        await axiosPublic.post("/users", userInfo);
+        // TODO: Uncomment below when backend endpoint is ready
+        // await axiosPublic.post("/users", userInfo);
         
         Swal.fire({
           title: "Welcome!",
@@ -300,13 +349,13 @@ export default function Register() {
                   {...register("password", { 
                     required: true,
                     minLength: 6,
-                    pattern: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])/
+                    pattern: /(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])/
                   })}
                 />
               </div>
               {errors.password?.type === "required" && <span className="text-red-400 text-xs ml-1">Password is required</span>}
               {errors.password?.type === "minLength" && <span className="text-red-400 text-xs ml-1">Must be at least 6 characters</span>}
-              {errors.password?.type === "pattern" && <span className="text-red-400 text-xs ml-1">Must contain uppercase, lowercase, number & special char</span>}
+              {errors.password?.type === "pattern" && <span className="text-red-400 text-xs ml-1">Must contain uppercase, lowercase & number</span>}
             </div>
 
             {/* Confirm Password */}
